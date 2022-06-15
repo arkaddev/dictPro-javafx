@@ -32,10 +32,11 @@ public class MainController {
     private Label percentageId;
     @FXML
     private Button buttonOkId;
+    @FXML
+    private MenuItem importFileId;
 
 
-
-
+    // method sets label to null
     @FXML
     void initialize() {
 
@@ -47,14 +48,10 @@ public class MainController {
         buttonOkId.setDisable(true);
         plMeaningId.setDisable(true);
 
-
-
-
     }
 
 
-
-    //loading the file
+    // creating a file load window
     @FXML
     void importFileOnAction() {
 
@@ -65,7 +62,6 @@ public class MainController {
         fileName = f.getName();
 
 
-        // fileInfoId.setVisible(false);
         if (fileChooser != null) {
             startId.setDisable(false);
         } else {
@@ -79,6 +75,7 @@ public class MainController {
     int wordCounter;
     ArrayList<String> listWithWords = new ArrayList<String>();
 
+    // reading from a file and creating a list with data
     public void createList() {
 
         wordCounter = 0; // how many words are in the txt file
@@ -97,13 +94,13 @@ public class MainController {
             System.out.println("Nie znaleziono pliku.");
             e.printStackTrace();
         }
-
         System.out.println("W pliku znajduje sie: " + wordCounter + " slowek.");
     }
 
     String plMeaning;
     String engMeaning;
 
+    // drawing a phrase from the list and splitting the expression into 2 separate strings
     public void drawWord() {
 
         Random random = new Random(); // generates random integer
@@ -133,24 +130,29 @@ public class MainController {
             // * System.out.print(" "); } } System.out.println();
 
             System.out.println("Wylosowano slowo: " + engMeaning);
-
         }
     }
 
-
+    // operations related to the use of the start option
     @FXML
     void startOnAction() {
         drawWord();
         buttonOkId.setDisable(false);
         plMeaningId.setDisable(false);
+
+        startId.setDisable(true);
+        importFileId.setDisable(true);
+
     }
 
     int goodAnswersCounter;
     int badAnswersCounter;
 
-    
+
     float percentage;
 
+    // operations related to the use of the start option
+    // displays information about the answer and counts the percentage of good results
     @FXML
     void buttonOkOnAction() {
 
@@ -179,15 +181,23 @@ public class MainController {
         drawWord();
         plMeaningId.setText("");
 
-        String sumOfWords = Integer.toString(goodAnswersCounter+badAnswersCounter);
+        String sumOfWords = Integer.toString(goodAnswersCounter + badAnswersCounter);
         whichWordId.setText(sumOfWords);
     }
 
+    // deletion of information about the response result
     @FXML
     void plMeaningOnMouseClicked() {
 
         respondInfoId.setText("");
         respondInfoId.setStyle(null);
+    }
+
+
+    // dialogue window about
+    @FXML
+    void aboutOnAction() {
+        Dialog.dialogAboutApplication();
     }
 
 }
