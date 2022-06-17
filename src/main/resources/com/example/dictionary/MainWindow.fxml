@@ -17,7 +17,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Plik">
             <items>
-                  <MenuItem fx:id="startId" disable="true" mnemonicParsing="false" onAction="#startOnAction" text="Start" />
+                  <MenuItem fx:id="startId" mnemonicParsing="false" onAction="#startOnAction" text="Start" />
               <MenuItem fx:id="importFileId" mnemonicParsing="false" onAction="#importFileOnAction" text="Wczytaj plik" />
             </items>
           </Menu>

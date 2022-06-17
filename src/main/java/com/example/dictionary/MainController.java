@@ -3,14 +3,8 @@ package com.example.dictionary;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
 public class MainController {
 
@@ -42,6 +36,7 @@ public class MainController {
 
         engMeaningId.setText("Wczytaj plik");
 
+        startId.setDisable(true);
         respondInfoId.setText(null);
         whichWordId.setText(null);
         percentageId.setText(null);
@@ -50,52 +45,22 @@ public class MainController {
 
     }
 
+    FileOperations fileOperations = new FileOperations();
+    Words words = new Words();
 
     // creating a file load window
     @FXML
     void importFileOnAction() {
 
-        Stage stage = new Stage();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Otworz plik");
-        File f = fileChooser.showOpenDialog(null);
-        fileName = f.getName();
-
-
-        if (fileChooser != null) {
-            startId.setDisable(false);
-        } else {
-            System.out.println("Nie wczytano pliku");
-        }
-        createList();
-        fileInfoId.setText("Wczytano plik " + fileName + ". Ilosc wyrazow: " + wordCounter);
+        fileOperations.chooseFile();
+        System.out.println(FileOperations.getFileName());
+        words.createList();
+        startId.setDisable(false);
+        fileInfoId.setText("Wczytano plik " + fileName + ". Ilosc wyrazow: " + words.getWordCounter());
         engMeaningId.setText("Nacisnij Start");
+
     }
 
-    int wordCounter;
-    ArrayList<String> listWithWords = new ArrayList<String>();
-
-    // reading from a file and creating a list with data
-    public void createList() {
-
-        wordCounter = 0; // how many words are in the txt file
-
-        try {
-            File plik = new File(fileName); // reading the file
-            Scanner in = new Scanner(plik);
-            System.out.println("Wczytano plik");
-            while (in.hasNextLine()) {
-                wordCounter++; // word counting
-                String oneWord = in.nextLine();
-                listWithWords.add(oneWord); // adding to the list
-            }
-            in.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Nie znaleziono pliku.");
-            e.printStackTrace();
-        }
-        System.out.println("W pliku znajduje sie: " + wordCounter + " slowek.");
-    }
 
     String plMeaning;
     String engMeaning;
@@ -104,8 +69,8 @@ public class MainController {
     public void drawWord() {
 
         Random random = new Random(); // generates random integer
-        int drawnNumber = random.nextInt(wordCounter); // draw a number from 0 to
-        String phraze = listWithWords.get(drawnNumber);
+        int drawnNumber = random.nextInt(words.getWordCounter()); // draw a number from 0 to
+        String phraze = words.listWithWords.get(drawnNumber);
 
         // there are words in the txt file that do not have a translation
         // if there is - sign , it means that the word has a translation
@@ -191,13 +156,14 @@ public class MainController {
 
         respondInfoId.setText("");
         respondInfoId.setStyle(null);
+
     }
 
 
     // dialogue window about
     @FXML
     void aboutOnAction() {
-        Dialog.dialogAboutApplication();
+        DialogWindow.dialogAboutApplication();
     }
 
 }
