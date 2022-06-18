@@ -2,18 +2,24 @@ package com.example.dictionary;
 
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
-import java.util.Random;
+import java.io.IOException;
+
 
 public class MainController {
-
-    private String fileName;
 
     @FXML
     private Label fileInfoId;
     @FXML
-    private MenuItem startId;
+    private MenuItem testId;
+    @FXML
+    private MenuItem startLearningId;
+    @FXML
+    private MenuItem endLearningId;
     @FXML
     private Label engMeaningId;
     @FXML
@@ -29,6 +35,11 @@ public class MainController {
     @FXML
     private MenuItem importFileId;
 
+    private boolean testInfo;
+
+    FileOperations fileOperations = new FileOperations();
+    Words words = new Words();
+
 
     // method sets label to null
     @FXML
@@ -36,7 +47,9 @@ public class MainController {
 
         engMeaningId.setText("Wczytaj plik");
 
-        startId.setDisable(true);
+        testId.setDisable(true);
+        startLearningId.setDisable(true);
+        endLearningId.setDisable(true);
         respondInfoId.setText(null);
         whichWordId.setText(null);
         percentageId.setText(null);
@@ -45,70 +58,66 @@ public class MainController {
 
     }
 
-    FileOperations fileOperations = new FileOperations();
-    Words words = new Words();
-
     // creating a file load window
     @FXML
     void importFileOnAction() {
 
         fileOperations.chooseFile();
-        System.out.println(FileOperations.getFileName());
+        //System.out.println(FileOperations.getFileName());
         words.createList();
-        startId.setDisable(false);
-        fileInfoId.setText("Wczytano plik " + fileName + ". Ilosc wyrazow: " + words.getWordCounter());
+        startLearningId.setDisable(false);
+        testId.setDisable(false);
+        fileInfoId.setText("Wczytano plik " + FileOperations.getFileName() + ". Ilosc wyrazow: " + words.getWordCounter());
         engMeaningId.setText("Nacisnij Start");
 
     }
 
+    @FXML
+    void testOnAction() {
+        testInfo = true;
 
-    String plMeaning;
-    String engMeaning;
+        engMeaningId.setText(words.drawWord());
+        buttonOkId.setDisable(false);
+        plMeaningId.setDisable(false);
 
-    // drawing a phrase from the list and splitting the expression into 2 separate strings
-    public void drawWord() {
+        testId.setDisable(true);
+        startLearningId.setDisable(true);
+        importFileId.setDisable(true);
 
-        Random random = new Random(); // generates random integer
-        int drawnNumber = random.nextInt(words.getWordCounter()); // draw a number from 0 to
-        String phraze = words.listWithWords.get(drawnNumber);
 
-        // there are words in the txt file that do not have a translation
-        // if there is - sign , it means that the word has a translation
-
-        if (phraze.contains("-")) {
-            engMeaning = phraze.substring(0, phraze.indexOf("-") - 1);
-            plMeaning = phraze.substring(phraze.indexOf("-") + 2, phraze.length());
-            engMeaningId.setText(engMeaning);
-
-            if (plMeaning.contains(",")) {
-                System.out.println("Zawiera przecinek");
-                plMeaning = phraze.substring(phraze.indexOf("-") + 2, phraze.indexOf(","));
-            }
-
-            // hint for the user, display the number of characters, by sign -
-
-            // * char[] polMeaningTab; polMeaningTab = polMeaning.toCharArray();
-            // *
-            // * for (int i = 0; i < polMeaning.length(); i++) {
-            // *
-            // * if (Character.isLetter(polMeaningTab[i])) { System.out.print("-"); } else {
-            // * System.out.print(" "); } } System.out.println();
-
-            System.out.println("Wylosowano slowo: " + engMeaning);
-        }
     }
 
     // operations related to the use of the start option
     @FXML
-    void startOnAction() {
-        drawWord();
+    void startLearningOnAction() {
+        testInfo = false;
+
+        //words.drawWord();
+        //engMeaningId.setText(Words.getEngMeaning());
+        engMeaningId.setText(words.drawWord());
         buttonOkId.setDisable(false);
         plMeaningId.setDisable(false);
 
-        startId.setDisable(true);
+        testId.setDisable(true);
+        startLearningId.setDisable(true);
         importFileId.setDisable(true);
+        endLearningId.setDisable(false);
 
     }
+
+    // dialogue window about learning
+    @FXML
+    void endLearningOnAction() {
+
+        DialogWindow.dialogLearning();
+        endLearningId.setDisable(true);
+        importFileId.setDisable(false);
+        buttonOkId.setDisable(true);
+        plMeaningId.setDisable(true);
+
+
+    }
+
 
     int goodAnswersCounter;
     int badAnswersCounter;
@@ -121,9 +130,10 @@ public class MainController {
     @FXML
     void buttonOkOnAction() {
 
+
         String myrespond = plMeaningId.getText();
 
-        if (myrespond.equals(plMeaning)) {
+        if (myrespond.equals(Words.getPlMeaning())) {
             respondInfoId.setText("Odpowiedz poprawna");
             respondInfoId.setStyle("-fx-background-color: #008000;");
 
@@ -131,7 +141,6 @@ public class MainController {
             percentage = (goodAnswersCounter * 100) / (goodAnswersCounter + badAnswersCounter);
             String p = Float.toString(percentage);
             percentageId.setText(p + "%");
-
 
         } else {
             respondInfoId.setText("Odpowiedz bledna");
@@ -143,11 +152,30 @@ public class MainController {
             percentageId.setText(p + "%");
 
         }
-        drawWord();
+
+        if (testInfo && (goodAnswersCounter + badAnswersCounter == 5)) {
+
+            System.out.println("Test zakonczony");
+            DialogWindow.dialogTest();
+
+            endLearningId.setDisable(true);
+            importFileId.setDisable(false);
+            buttonOkId.setDisable(true);
+            plMeaningId.setDisable(true);
+
+        }
+
+        if (!(testInfo && (goodAnswersCounter + badAnswersCounter == 5))) {
+            //words.drawWord();
+            //engMeaningId.setText(Words.getEngMeaning());
+            engMeaningId.setText(words.drawWord());
+
+        }
         plMeaningId.setText("");
 
         String sumOfWords = Integer.toString(goodAnswersCounter + badAnswersCounter);
         whichWordId.setText(sumOfWords);
+
     }
 
     // deletion of information about the response result
@@ -159,12 +187,16 @@ public class MainController {
 
     }
 
-
     // dialogue window about
     @FXML
     void aboutOnAction() {
         DialogWindow.dialogAboutApplication();
     }
 
+    // dialogue window about statistics
+    @FXML
+    void statisticsOnAction() throws IOException {
+words.f();
+    }
 }
 
