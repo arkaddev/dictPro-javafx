@@ -8,6 +8,7 @@ public class FileOperations {
     private static String fileName;
 
     public static String getFileName() {
+
         return fileName;
     }
 
@@ -19,6 +20,9 @@ public class FileOperations {
         java.io.File f = fileChooser.showOpenDialog(null);
         fileName = f.getName();
     }
+
+
+
 
 
 

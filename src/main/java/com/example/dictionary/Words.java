@@ -95,19 +95,4 @@ public class Words extends FileOperations {
 
 
 
-    public void f() throws IOException {
-
-//        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Statistics.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-//        //Scene scene = new Scene(fxmlLoader.load());
-//        Stage stage = new Stage();
-//        stage.setTitle("Dodaj produkt");
-//        stage.setScene(scene);
-//        stage.show();
-
-    }
-
-
-
-
 }

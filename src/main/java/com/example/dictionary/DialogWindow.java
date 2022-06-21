@@ -13,22 +13,19 @@ public class DialogWindow {
         alert.showAndWait();
 
     }
-
-
     public static void dialogLearning() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Podsumowanie");
-        alert.setHeaderText("Wynik: " + "" + "%");
+        alert.setHeaderText("Wynik: " + MainController.percentage2 + "%");
         alert.setContentText("WLiczba poprawnych odpowidzi: \n Liczba blednych odpowiedzi:");
 
         alert.showAndWait();
 
     }
-
     public static void dialogTest() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Podsumowanie Testu");
-        alert.setHeaderText("Wynik: " + "" + "%");
+        alert.setHeaderText("Wynik: " + MainController.percentage2 + "%");
         alert.setContentText("WLiczba poprawnych odpowidzi: \n Liczba blednych odpowiedzi:");
 
         alert.showAndWait();

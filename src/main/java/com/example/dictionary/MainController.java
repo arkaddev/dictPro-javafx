@@ -125,6 +125,7 @@ public class MainController {
 
     float percentage;
 
+    static String percentage2;
     // operations related to the use of the start option
     // displays information about the answer and counts the percentage of good results
     @FXML
@@ -141,6 +142,7 @@ public class MainController {
             percentage = (goodAnswersCounter * 100) / (goodAnswersCounter + badAnswersCounter);
             String p = Float.toString(percentage);
             percentageId.setText(p + "%");
+            percentage2 = p;
 
         } else {
             respondInfoId.setText("Odpowiedz bledna");
@@ -150,6 +152,7 @@ public class MainController {
             percentage = (goodAnswersCounter * 100) / (goodAnswersCounter + badAnswersCounter);
             String p = Float.toString(percentage);
             percentageId.setText(p + "%");
+            percentage2 = p;
 
         }
 
@@ -157,6 +160,7 @@ public class MainController {
 
             System.out.println("Test zakonczony");
             DialogWindow.dialogTest();
+            statisticsController.saveStatistics();
 
             endLearningId.setDisable(true);
             importFileId.setDisable(false);
@@ -194,9 +198,11 @@ public class MainController {
     }
 
     // dialogue window about statistics
+
+    StatisticsController statisticsController = new StatisticsController();
     @FXML
     void statisticsOnAction() throws IOException {
-words.f();
+        statisticsController.openStatistics();
     }
 }
 
